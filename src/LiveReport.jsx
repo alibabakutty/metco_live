@@ -4,6 +4,9 @@ import axios from 'axios';
 
 const LiveReport = () => {
   const [reportData, setReportData] = useState([]);
+
+  const apiUrl = import.meta.env.VITE_APP_API_URL || "http://localhost:9000";
+
   let salesxml = `<?xml version="1.0" encoding="utf-8"?>
 <ENVELOPE>
 <HEADER>
@@ -33,7 +36,8 @@ const LiveReport = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('/api/', salesxml, {
+        console.log('Fetching data from:', `${apiUrl}/api/`);
+        const response = await axios.post(`/api/`, salesxml, {
           headers: {
             'Content-Type': 'text/xml;charset=utf-8',
           },
@@ -72,11 +76,16 @@ const LiveReport = () => {
     };
 
     fetchData();
-  }, [salesxml]);
+  }, [salesxml, apiUrl]);
 
   //   useEffect(() => {
   // 	console.log(reportData);
   //   },[reportData])
+
+  useEffect(() => {
+    console.log('API URL:', import.meta.env.VITE_APP_API_URL);
+  }, []);
+  
   return (
     <div>
       <table className="border border-slate-300 border-collapse w-full">
